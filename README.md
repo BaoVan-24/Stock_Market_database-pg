@@ -29,7 +29,7 @@ To ensure data stays clean before any analysis runs, the database natively handl
 ## 3. Database Schema
 The database contains 10 tables covering reference data, user accounts, and trading activities.
 
-![Database ERD](erd_diagram.png)
+![Database ERD](erd.png)
 
 ---
 
