@@ -19,7 +19,7 @@ Instead of treating the database as just a passive storage table, I wanted to pr
 ## 2. Business Rules Implemented
 To ensure data stays clean before any analysis runs, the database natively handles key trading constraints:
 
-- No Short Selling: A trigger (BEFORE INSERT OR UPDATE) checks current holdings in portfolio_holdings before executing a sell order.
+- No Short Selling: A trigger checks current holdings in portfolio_holdings before executing a sell order.
 - Sufficient Cash Check: Buying stocks automatically validates account balance and deducts transaction costs plus brokerage fees. Accounts cannot drop below zero via CHECK (balance >= 0).
 - Account Ownership: Used composite foreign keys (account_id, investor_id) on trades to prevent orders from being booked into someone else's account.
 - Locked Trade History: Once a trade is marked as completed or cancelled, triggers prevent further edits to maintain an accurate transaction log.
@@ -36,7 +36,7 @@ The database contains 10 tables covering reference data, user accounts, and trad
 ## 4. Key Analytical Queries
 After setting up clean transactional data, I wrote queries to explore practical business questions:
 
-1. Portfolio Concentration (HHI): Calculated the Herfindahl-Hirschman Index using window functions to identify investors with high concentration risk in single stocks.
+1. Portfolio Concentration: Calculated the Herfindahl-Hirschman Index using window functions to identify investors with high concentration risk in single stocks.
 2. Realized vs. Unrealized PnL: Replayed chronological trade history using a Recursive CTE to calculate moving weighted-average costs at each point of sale.
 3. Dividend Eligibility: Reconciled cash dividends based on shares actually held on the declared date versus naive snapshot holdings.
 4. Data Quality Audit: Queried for operational anomalies, such as trades dated after the latest market price snapshot or listed stocks missing price history.
@@ -46,7 +46,7 @@ After setting up clean transactional data, I wrote queries to explore practical 
 ## 5. Testing & Validation
 The script includes automated test blocks to verify that the logic works as intended:
 - Confirmed that automated triggers correctly block illegal sell orders and cross-account trades.
-- Verified that transaction rollback (ROLLBACK) works properly when a transfer exceeds available funds.
+- Verified that transaction rollback works properly when a transfer exceeds available funds.
 - Reconciled final inventory: total holdings match the chronological net sum of all completed trades.
 
 ---
